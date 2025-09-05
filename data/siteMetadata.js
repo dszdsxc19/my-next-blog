@@ -1,10 +1,10 @@
 /** @type {import("pliny/config").PlinyConfig } */
 const siteMetadata = {
-  title: 'Terry的小木屋',
+  title: 'Terry的日记本',
   author: 'Terry Tan',
-  headerTitle: 'Terry的小木屋',
+  headerTitle: 'Terry的旅行日记',
   description: 'reading, writing, and sharing',
-  language: 'en-us',
+  language: 'zh-cn',
   theme: 'system', // system, dark or light
   siteUrl: 'https://tailwind-nextjs-starter-blog.vercel.app',
   siteRepo: 'https://github.com/dszdsxc19/my-next-blog',
@@ -22,7 +22,7 @@ const siteMetadata = {
   // instagram: 'https://www.instagram.com',
   medium: 'https://medium.com',
   // bluesky: 'https://bsky.app/',
-  locale: 'en-US',
+  locale: 'zh-CN',
   // set to true if you want a navbar fixed to the top
   stickyNav: false,
   analytics: {
@@ -80,8 +80,8 @@ const siteMetadata = {
       // please provide a link below to your custom theme css file.
       // example: https://giscus.app/themes/custom_example.css
       themeURL: '',
-      // This corresponds to the `data-lang="en"` in giscus's configurations
-      lang: 'en',
+      // This corresponds to the `data-lang="zh-CN"` in giscus's configurations
+      lang: 'zh-CN',
     },
   },
   search: {
