@@ -14,7 +14,7 @@ import FolderIndexLayout from '@/layouts/FolderIndexLayout'
 import { Metadata } from 'next'
 import siteMetadata from '@/data/siteMetadata'
 import { notFound } from 'next/navigation'
-import { getFolderPosts } from '@/utils/folderUtils'
+import { getFolderPosts } from 'utils/folderUtils'
 
 const defaultLayout = 'PostLayout'
 const layouts = {
