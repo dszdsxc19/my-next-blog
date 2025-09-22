@@ -10,9 +10,11 @@ import type { Authors, Blog } from 'contentlayer/generated'
 import PostSimple from '@/layouts/PostSimple'
 import PostLayout from '@/layouts/PostLayout'
 import PostBanner from '@/layouts/PostBanner'
+import FolderIndexLayout from '@/layouts/FolderIndexLayout'
 import { Metadata } from 'next'
 import siteMetadata from '@/data/siteMetadata'
 import { notFound } from 'next/navigation'
+import { getFolderPosts } from '@/utils/folderUtils'
 
 const defaultLayout = 'PostLayout'
 const layouts = {
@@ -26,6 +28,25 @@ export async function generateMetadata(props: {
 }): Promise<Metadata | undefined> {
   const params = await props.params
   const slug = decodeURI(params.slug.join('/'))
+
+  // 检查是否是文件夹索引页面
+  const indexPost = allBlogs.find((p) => p.slug === slug && p.isFolderIndex)
+  if (indexPost) {
+    return {
+      title: indexPost.title,
+      description: indexPost.summary,
+      openGraph: {
+        title: indexPost.title,
+        description: indexPost.summary,
+        siteName: siteMetadata.title,
+        locale: 'en_US',
+        type: 'website',
+        url: './',
+        images: [siteMetadata.socialBanner],
+      },
+    }
+  }
+
   const post = allBlogs.find((p) => p.slug === slug)
   const authorList = post?.authors || ['default']
   const authorDetails = authorList.map((author) => {
@@ -80,6 +101,24 @@ export const generateStaticParams = async () => {
 export default async function Page(props: { params: Promise<{ slug: string[] }> }) {
   const params = await props.params
   const slug = decodeURI(params.slug.join('/'))
+
+  // 检查是否是文件夹索引页面
+  const indexPost = allBlogs.find((p) => p.slug === slug && p.isFolderIndex)
+  if (indexPost) {
+    // 获取该文件夹下的所有文章
+    const folderPosts = allCoreContent(sortPosts(getFolderPosts(indexPost.folderPath)))
+    const mainContent = coreContent(indexPost)
+
+    return (
+      <FolderIndexLayout
+        content={mainContent}
+        folderPosts={folderPosts}
+        folderPath={indexPost.folderPath}
+        title={indexPost.title}
+      />
+    )
+  }
+
   // Filter out drafts in production
   const sortedCoreContents = allCoreContent(sortPosts(allBlogs))
   const postIndex = sortedCoreContents.findIndex((p) => p.slug === slug)

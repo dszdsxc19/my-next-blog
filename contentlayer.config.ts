@@ -112,11 +112,39 @@ export const Blog = defineDocumentType(() => ({
   },
   computedFields: {
     ...computedFields,
+    // 修改 slug 计算逻辑
+    slug: {
+      type: 'string',
+      resolve: (doc) => {
+        const path = doc._raw.flattenedPath
+        // 如果是 _index.mdx 文件，返回文件夹路径
+        if (path.endsWith('_index')) {
+          return path.replace('_index', '')
+        }
+        return path.replace(/^.+?(\/)/, '')
+      },
+    },
+    // 添加文件夹路径计算
+    folderPath: {
+      type: 'string',
+      resolve: (doc) => {
+        const path = doc._raw.flattenedPath
+        if (path.endsWith('_index')) {
+          return path.replace('_index', '')
+        }
+        return path.substring(0, path.lastIndexOf('/'))
+      },
+    },
+    // 标识是否为文件夹索引
+    isFolderIndex: {
+      type: 'boolean',
+      resolve: (doc) => doc._raw.flattenedPath.endsWith('_index'),
+    },
     structuredData: {
       type: 'json',
       resolve: (doc) => ({
         '@context': 'https://schema.org',
-        '@type': 'BlogPosting',
+        '@type': doc._raw.flattenedPath.endsWith('_index') ? 'WebPage' : 'BlogPosting',
         headline: doc.title,
         datePublished: doc.date,
         dateModified: doc.lastmod || doc.date,
